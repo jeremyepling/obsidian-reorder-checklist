@@ -1,9 +1,9 @@
 {
   "id": "reorder-checklist",
   "name": "Reorder Checklist",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "minAppVersion": "1.0.0",
-  "description": "Move the checklist item under the cursor (with its sub-items) to the top of the unchecked or checked group when toggled. Respects indentation.",
+  "description": "Sort every checklist on the page — unchecked on top, checked at bottom — respecting indentation, headings, and ordered-list numbering.",
   "author": "Jeremy Epling",
   "authorUrl": "https://github.com/jeremyepling",
   "isDesktopOnly": false
