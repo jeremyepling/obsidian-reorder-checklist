@@ -1,6 +1,6 @@
 {
   "name": "obsidian-reorder-checklist",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Obsidian plugin: move a checklist item (with its sub-items) to the top of its unchecked or checked group when toggled. Respects indentation.",
   "main": "main.js",
   "scripts": {

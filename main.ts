@@ -21,6 +21,8 @@ import { Editor, Notice, Plugin } from "obsidian";
  */
 
 const ITEM_RE = /^([ \t]*)(?:[-*+]|\d+[.)])\s+\[(.)\]/;
+// Any list line (bullet or ordered, with or without a checkbox).
+const LIST_RE = /^[ \t]*(?:[-*+]|\d+[.)])\s+/;
 
 interface Block {
   start: number;
@@ -65,18 +67,25 @@ export function reorderChecklist(editor: Editor, tabSize: number): void {
   }
   const baseInd = indentWidth(m[1]);
 
-  // Group = contiguous run of lines with indent >= baseInd, bounded above and
-  // below by a blank line or a line indented less than baseInd (the parent).
+  // Group = contiguous run of lines belonging to this list. It is bounded by a
+  // blank line, an outdent (indent < baseInd), or a non-list line at the
+  // sibling indent (e.g. a heading or paragraph). Deeper lines (indent >
+  // baseInd) always stay in — they are sub-items / continuation of an item.
+  const isBoundary = (line: string): boolean => {
+    if (line.trim() === "") return true;
+    const ind = indentWidth(leadingWS(line));
+    if (ind < baseInd) return true;
+    if (ind === baseInd && !LIST_RE.test(line)) return true;
+    return false;
+  };
   let groupTop = cur;
   for (let i = cur - 1; i >= 0; i--) {
-    if (lines[i].trim() === "") break;
-    if (indentWidth(leadingWS(lines[i])) < baseInd) break;
+    if (isBoundary(lines[i])) break;
     groupTop = i;
   }
   let groupBot = cur;
   for (let i = cur + 1; i < lineCount; i++) {
-    if (lines[i].trim() === "") break;
-    if (indentWidth(leadingWS(lines[i])) < baseInd) break;
+    if (isBoundary(lines[i])) break;
     groupBot = i;
   }
 
